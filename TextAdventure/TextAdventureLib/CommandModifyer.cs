@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace TextAdventureLib
 {
-    enum Commands
+    public enum CommandModifyer
     {
         start,
-        end,
-        branch,
-        label
+        first,
+        finish,
+        target
     }
 }

@@ -6,12 +6,9 @@ using System.Threading.Tasks;
 
 namespace TextAdventureLib
 {
-    public class Node
+    public class UserInput
     {
-        public string Label { get; set; }
-
-        public string Text { get; set; }
-
-        public List<UserInput> Inputs{ get; set; }
+        public string MatchText { get; set; }
+        public string Target { get; set; }
     }
 }

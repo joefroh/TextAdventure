@@ -6,12 +6,11 @@ using System.Threading.Tasks;
 
 namespace TextAdventureLib
 {
-    public class Node
+    class ParserInputException : ArgumentException
     {
-        public string Label { get; set; }
+        public ParserInputException(string message) : base(message)
+        {
 
-        public string Text { get; set; }
-
-        public List<UserInput> Inputs{ get; set; }
+        }
     }
 }

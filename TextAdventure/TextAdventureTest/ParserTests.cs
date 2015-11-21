@@ -17,7 +17,7 @@ namespace TextAdventureTest
                 Parser parser = new Parser("THIS IS NOT A FILE");
                 Assert.Fail();
             }
-            catch(ArgumentException e)
+            catch(ArgumentException)
             {
                 Assert.IsTrue(true);
             }

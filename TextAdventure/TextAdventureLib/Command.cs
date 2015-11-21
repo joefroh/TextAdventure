@@ -6,12 +6,10 @@ using System.Threading.Tasks;
 
 namespace TextAdventureLib
 {
-    public class Node
+    internal class Command
     {
-        public string Label { get; set; }
+        public CommandType Type { get; set; }
 
-        public string Text { get; set; }
-
-        public List<UserInput> Inputs{ get; set; }
+        public List<CommandModifyer> Modifyers { get; set; }
     }
 }
