@@ -1,0 +1,9 @@
+﻿#label="Beginning" %first
+You are at the beginning of a great adventure.
+Would you like to continue?
+#input="No" %target="SkipToEnd"
+#end
+
+#label="SkipToEnd" %finish
+Well you suck...
+#end

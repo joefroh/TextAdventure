@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TextAdventureLib;
 
 namespace TextAdventureConsole
 {
@@ -10,6 +11,8 @@ namespace TextAdventureConsole
     {
         static void Main(string[] args)
         {
+            Parser parser = new Parser("Sample1.taf");
+            parser.Parse();
         }
     }
 }

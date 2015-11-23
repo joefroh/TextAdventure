@@ -20,9 +20,13 @@ namespace TextAdventureLib
             }
         }
 
-        public Parser()
+        public void Parse()
         {
-
+            using (StreamReader reader = new StreamReader(file.FullName))
+            {
+                NodeFactory factory = new NodeFactory(reader);
+                factory.GetNextNode();
+            }
         }
     }
 }
