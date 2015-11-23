@@ -47,7 +47,7 @@ namespace TextAdventureLib
             CommandType type = GetCommandTypeFromChunk(chunks[0]);
 
             var mods = new List<CommandModifyer>();
-            for( int i = 1; i < chunks.Length; i++)
+            for (int i = 1; i < chunks.Length; i++)
             {
                 if (chunks[i][0] == '%')
                 {
@@ -55,11 +55,15 @@ namespace TextAdventureLib
                 }
                 else
                 {
-                    throw new ParserInputException(string.Format("Unexpected input in line {0}.",chunks[i]));
+                    throw new ParserInputException(string.Format("Unexpected input in line {0}.", chunks[i]));
                 }
             }
 
-            return new Command { Type = type, Modifyers = mods };
+            var attrs = GetAttributesFromChunks(chunks);
+
+            var command = new Command(attrs) { Type = type, Modifyers = mods };
+
+            return command;
         }
 
         private CommandType GetCommandTypeFromChunk(string chunk)
@@ -86,6 +90,22 @@ namespace TextAdventureLib
             {
                 throw new ArgumentException(String.Format("Command {0} is not a valid command", typeString));
             }
+        }
+
+        private Dictionary<string, string> GetAttributesFromChunks(IEnumerable<string> chunks)
+        {
+            var dict = new Dictionary<string, string>();
+
+            foreach (var chunk in chunks)
+            {
+                var split = chunk.Split('=');
+                if (split.Length == 2)
+                {
+                    dict.Add(split[0].Substring(1), split[1]);
+                }
+            }
+
+            return dict;
         }
 
     }

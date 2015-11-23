@@ -11,5 +11,12 @@ namespace TextAdventureLib
         public CommandType Type { get; set; }
 
         public List<CommandModifyer> Modifyers { get; set; }
+
+        public Dictionary<string, string> Attributes { get; }
+
+        public Command(Dictionary<string,string> attr)
+        { 
+            Attributes = attr;
+        }
     }
 }
