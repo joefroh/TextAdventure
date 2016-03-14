@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace TextAdventureLib
 {
     public class NodeFactory
     {
-        private StreamReader _reader;
+        private readonly StreamReader _reader;
 
         public NodeFactory(StreamReader reader)
         {
@@ -18,36 +16,76 @@ namespace TextAdventureLib
 
         public bool EndOfStream
         {
-            get
-            {
-                return _reader.EndOfStream;
-            }
+            get { return _reader.EndOfStream; }
         }
 
         public Node GetNextNode()
         {
-            StringBuilder nodeText = new StringBuilder();
-            Node newNode = new Node();
-            var line = _reader.ReadLine();
-            if (line[0] == '#') //Must be a command line
+            var nodeText = new StringBuilder();
+            var newNode = new Node();
+            var line = "";
+            while (line != "#end")
             {
-                var command = GetCommandFromLine(line);
+                line = _reader.ReadLine();
+                if (!string.IsNullOrEmpty(line))
+                {
+                    if (line[0] == '#') //Must be a command line
+                    {
+                        var command = GetCommandFromLine(line);
+                        ApplyCommand(command, newNode);
+                    }
+                    else //must be node text then
+                    {
+                        nodeText.AppendLine(line);
+                    }
+                }
             }
-            else //must be node text then
-            {
-                nodeText.AppendLine(line);
-            }
-
+            newNode.Text = nodeText.ToString();
             return newNode;
+        }
+
+        private void ApplyCommand(Command command, Node newNode)
+        {
+            switch (command.Type)
+            {
+                case CommandType.end:
+                    break;
+                case CommandType.input:
+                    var input = new UserInput();
+                    input.MatchText = command.Attributes["input"];
+                    input.Target = command.Attributes["target"];
+                    newNode.Inputs.Add(input);
+                    break;
+                case CommandType.label:
+                    newNode.Label = command.Attributes["label"];
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+            HandleModifiers(command, newNode);
+        }
+
+        private void HandleModifiers(Command command, Node newNode)
+        {
+            if (command.Type == CommandType.label)
+            {
+                foreach (var commandModifyer in command.Modifyers)
+                {
+                    if (commandModifyer == CommandModifyer.start || commandModifyer == CommandModifyer.finish)
+                    {
+                        newNode.Type = commandModifyer;
+                    }
+                }
+            }
         }
 
         private Command GetCommandFromLine(string line)
         {
             var chunks = line.Split(' ');
-            CommandType type = GetCommandTypeFromChunk(chunks[0]);
+            var type = GetCommandTypeFromChunk(chunks[0]);
 
             var mods = new List<CommandModifyer>();
-            for (int i = 1; i < chunks.Length; i++)
+            for (var i = 1; i < chunks.Length; i++)
             {
                 if (chunks[i][0] == '%')
                 {
@@ -61,7 +99,7 @@ namespace TextAdventureLib
 
             var attrs = GetAttributesFromChunks(chunks);
 
-            var command = new Command(attrs) { Type = type, Modifyers = mods };
+            var command = new Command(attrs) {Type = type, Modifyers = mods};
 
             return command;
         }
@@ -71,11 +109,11 @@ namespace TextAdventureLib
             var typeString = chunk.Substring(1).Split('=')[0];
             try
             {
-                return (CommandType)Enum.Parse(typeof(CommandType), typeString);
+                return (CommandType) Enum.Parse(typeof (CommandType), typeString);
             }
             catch
             {
-                throw new ArgumentException(String.Format("Command {0} is not a valid command", typeString));
+                throw new ArgumentException(string.Format("Command {0} is not a valid command", typeString));
             }
         }
 
@@ -84,11 +122,11 @@ namespace TextAdventureLib
             var typeString = chunk.Substring(1).Split('=')[0];
             try
             {
-                return (CommandModifyer)Enum.Parse(typeof(CommandModifyer), typeString);
+                return (CommandModifyer) Enum.Parse(typeof (CommandModifyer), typeString);
             }
             catch
             {
-                throw new ArgumentException(String.Format("Command {0} is not a valid command", typeString));
+                throw new ArgumentException(string.Format("Command {0} is not a valid command", typeString));
             }
         }
 
@@ -101,12 +139,11 @@ namespace TextAdventureLib
                 var split = chunk.Split('=');
                 if (split.Length == 2)
                 {
-                    dict.Add(split[0].Substring(1), split[1]);
+                    dict.Add(split[0].Substring(1), split[1].Substring(1, split[1].Length - 2)); //remove the quotes
                 }
             }
 
             return dict;
         }
-
     }
 }

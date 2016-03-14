@@ -12,7 +12,12 @@ namespace TextAdventureConsole
         static void Main(string[] args)
         {
             Parser parser = new Parser("Sample1.taf");
-            parser.Parse();
+            var nodes = parser.Parse();
+            Engine engine = new Engine(nodes);
+            engine.Play();
+
+            Console.WriteLine("Done! ENTER to exit.");
+            Console.ReadLine();
         }
     }
 }

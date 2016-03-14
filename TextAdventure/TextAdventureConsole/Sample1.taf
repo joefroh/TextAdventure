@@ -1,9 +1,21 @@
-﻿#label="Beginning" %first
+﻿#label="Beginning" %start
 You are at the beginning of a great adventure.
 Would you like to continue?
 #input="No" %target="SkipToEnd"
+#input="Yes" %target="FirstStage"
+#end
+
+#label="FirstStage"
+You clearly are stoked for this adventure.
+Too bad the person who wrote this story hasn't written more.
+You done?!
+#input="Yup" %target="BroFinish"
 #end
 
 #label="SkipToEnd" %finish
 Well you suck...
+#end
+
+#label="BroFinish" %finish
+Ya, thats what I thought
 #end
